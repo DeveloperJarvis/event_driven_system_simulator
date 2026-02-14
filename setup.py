@@ -28,13 +28,38 @@
 # --------------------------------------------------
 
 # --------------------------------------------------
-# main MODULE
+# setup MODULE
 # --------------------------------------------------
-"""
-Main entry point for the Event-Driven System Simulator
-"""
+
 # --------------------------------------------------
 # imports
 # --------------------------------------------------
-import sys
-from 
+from setuptools import setup, find_packages
+
+
+setup(
+    name="event_driven_simulator",
+    version="0.1.0",
+    description="A Python event-driven system simulator for hospitals, queues, traffic, and custom scenarios",
+    author="Developer Jarvis",
+    author_email="developerjarvis@github.com",
+    license="GPL-3.0-or-later",
+    packages=find_packages(
+        exclude=("tests*", "logs*",)
+    ),
+    python_requires=">=3.9",
+    install_requires=[],
+    extras_require={
+        "dev": [
+            "pytest",
+            "black",
+            "flake8",
+            "mypy",
+        ]
+    },
+    classifiers=[
+        "Programming Language :: Python :: 3",
+        "License :: OSI Approved :: GNU General Public License v3 or later (GPLv3+)",
+        "Operating System :: OS Independent",
+    ],
+)

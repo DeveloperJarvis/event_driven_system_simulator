@@ -6,36 +6,54 @@ set ROOT=.
 
 REM Create directories if they do not exist
 call :create_folder "%ROOT%"
-call :create_folder "%ROOT%\bin"
 call :create_folder "%ROOT%\config"
 call :create_folder "%ROOT%\docs"
+call :create_folder "%ROOT%\events"
 call :create_folder "%ROOT%\logs"
-call :create_folder "%ROOT%\src"
+call :create_folder "%ROOT%\models"
+call :create_folder "%ROOT%\scenarios"
+call :create_folder "%ROOT%\simulator"
 call :create_folder "%ROOT%\tests"
 
 REM Create files only if they do not exist
 REM Python source files (with header)
+call :create_py_file "%ROOT%\main.py"
+
 call :create_py_file "%ROOT%\setup.py"
 
-call :create_py_file "%ROOT%\bin\run_detection.py"
-
+call :create_py_file "%ROOT%\config\__init__.py"
 call :create_py_file "%ROOT%\config\config.py"
 
-call :create_py_file "%ROOT%\src\__init__.py"
-call :create_py_file "%ROOT%\src\log_reader.py"
-call :create_py_file "%ROOT%\src\pattern_detector.py"
-call :create_py_file "%ROOT%\src\anomaly_detector.py"
-call :create_py_file "%ROOT%\src\storage.py"
-call :create_py_file "%ROOT%\src\report.py"
+call :create_py_file "%ROOT%\events\__init__.py"
+call :create_py_file "%ROOT%\events\custom_events.py"
+call :create_py_file "%ROOT%\events\hospital_events.py"
+call :create_py_file "%ROOT%\events\queue_events.py"
+call :create_py_file "%ROOT%\events\traffic_events.py"
+call :create_py_file "%ROOT%\models\__init__.py"
+call :create_py_file "%ROOT%\models\hospital_system.py"
+call :create_py_file "%ROOT%\models\generic_system.py"
+call :create_py_file "%ROOT%\models\queue_system.py"
+call :create_py_file "%ROOT%\models\traffic_system.py"
+call :create_py_file "%ROOT%\scenarios\__init__.py"
+call :create_py_file "%ROOT%\scenarios\queue_simulation.py"
+call :create_py_file "%ROOT%\scenarios\traffic_simulation.py"
+call :create_py_file "%ROOT%\simulator\__init__.py"
+call :create_py_file "%ROOT%\simulator\engine.py"
+call :create_py_file "%ROOT%\simulator\event.py"
+call :create_py_file "%ROOT%\simulator\event_queue.py"
+call :create_py_file "%ROOT%\simulator\metrics.py"
+call :create_py_file "%ROOT%\simulator\utils.py"
 
 call :create_py_file "%ROOT%\tests\__init__.py"
-call :create_py_file "%ROOT%\tests\test_log_reader.py"
-call :create_py_file "%ROOT%\tests\test_pattern_detector.py"
-call :create_py_file "%ROOT%\tests\test_anomaly_detector.py"
-call :create_py_file "%ROOT%\tests\test_storage.py"
+call :create_py_file "%ROOT%\tests\test_engine.py"
+call :create_py_file "%ROOT%\tests\test_events.py"
+call :create_py_file "%ROOT%\tests\test_metics.py"
+call :create_py_file "%ROOT%\tests\test_event_queue.py"
+call :create_py_file "%ROOT%\tests\test_scenarios.py"
+call :create_py_file "%ROOT%\tests\test_runner.py"
 
 REM Non-Python files (empty)
-call :create_file "%ROOT%\logs\tool_execution.log"
+call :create_file "%ROOT%\logs\events.log"
 
 call :create_file "%ROOT%\requirements.txt"
 call :create_file "%ROOT%\README.md"
@@ -79,7 +97,7 @@ echo # -*- Python -*- Compatibility Header
 echo #
 echo # Copyright ^(C^) 2023 Developer Jarvis ^(Pen Name^)
 echo #
-echo # This file is part of the Log Pattern Detection Tool Library. This library is free
+echo # This file is part of the Event-Driven System Simulator Library. This library is free
 echo # software; you can redistribute it and/or modify it under the
 echo # terms of the GNU General Public License as published by the
 echo # Free Software Foundation; either version 3, or ^(at your option^)
@@ -95,8 +113,8 @@ echo # along with this program. If not, see ^<https://www.gnu.org/licenses/^>.
 echo #
 echo # SPDX-License-Identifier: GPL-3.0-or-later
 echo #
-echo # Log Pattern Detection Tool - Find patterns and anomalies in large log files
-echo #                       Skills: streaming I/O, algorithms, regex
+echo # Event-Driven System Simulator - Simulate real-world event systems ^(traffic, queues^)
+echo # Skills: simulation modeling, priority queues
 echo #
 echo # Author: Developer Jarvis ^(Pen Name^)
 echo # Contact: https://github.com/DeveloperJarvis
