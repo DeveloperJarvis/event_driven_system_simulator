@@ -34,4 +34,39 @@
 # --------------------------------------------------
 # imports
 # --------------------------------------------------
+import unittest
+from simulator.metrics import Metrics
+from events.custom_events import CustomEvent
 
+
+# --------------------------------------------------
+# test metrics
+# --------------------------------------------------
+class TestMetrics(unittest.TestCase):
+
+    def test_record_and_report(self):
+        metrics = Metrics()
+        event1 = CustomEvent(name="EventA", timestamp=0)
+        event2 = CustomEvent(name="EventB", timestamp=0)
+
+        metrics.record_event(event1)
+        metrics.record_event(event1)
+        metrics.record_event(event2)
+
+        self.assertEqual(metrics.data["EventA"], 2)
+        self.assertEqual(metrics.data["EventB"], 1)
+
+        # Override print to test report output
+        import io, sys
+        captured_output = io.StringIO()
+        sys.stdout = captured_output
+        metrics.report()
+        sys.stdout = sys.__stdout__
+
+        output = captured_output.getvalue()
+        self.assertIn("EventA: 2", output)
+        self.assertIn("EventB: 1", output)
+
+
+if __name__ == "__main__":
+    unittest.main()

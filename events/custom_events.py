@@ -30,8 +30,27 @@
 # --------------------------------------------------
 # custom_events MODULE
 # --------------------------------------------------
-
+"""
+Custom user-defined events
+"""
 # --------------------------------------------------
 # imports
 # --------------------------------------------------
+from simulator.event import Event
 
+
+# --------------------------------------------------
+# custom event
+# --------------------------------------------------
+class CustomEvent(Event):
+    def __init__(
+            self, name, timestamp, priority=0, data=None
+        ):
+        super().__init__(name, timestamp, priority)
+        self.data = data
+    
+    def process(self, engine):
+        print(
+            f"[CustomEvent] Processing {self.name} at "
+            f"{self.timestamp} with data: {self.data}"
+        )

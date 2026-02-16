@@ -30,8 +30,23 @@
 # --------------------------------------------------
 # traffic_system MODULE
 # --------------------------------------------------
-
+"""
+Traffic simulation system
+"""
 # --------------------------------------------------
 # imports
 # --------------------------------------------------
+from simulator.event import Event
+from .generic_system import GenericSystem
 
+
+# --------------------------------------------------
+# traffic system
+# --------------------------------------------------
+class TrafficSystem(GenericSystem):
+    def __init__(self, num_intersections=4):
+        super().__init__("TrafficSystem")
+        self.num_intersections = num_intersections
+    
+    def update(self, event: Event):
+        print(f"[TrafficSystem] Event: {event.name}")

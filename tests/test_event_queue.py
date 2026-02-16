@@ -34,4 +34,41 @@
 # --------------------------------------------------
 # imports
 # --------------------------------------------------
+import unittest
+from simulator.event_queue import EventQueue
+from events.custom_events import CustomEvent
 
+
+# --------------------------------------------------
+# test event queue
+# --------------------------------------------------
+class TestEventQueue(unittest.TestCase):
+
+    def setUp(self):
+        self.queue = EventQueue()
+    
+    def test_enqueue_dequeue_order(self):
+        event1 = CustomEvent(name="Event1", timestamp=5)
+        event2 = CustomEvent(name="Event2", timestamp=2)
+        event3 = CustomEvent(name="Event3", timestamp=3)
+
+        self.queue.add_event(event1)
+        self.queue.add_event(event2)
+        self.queue.add_event(event3)
+
+        # Priority queue should dequeue by timestamp order
+        first = self.queue.pop_event()
+        second = self.queue.pop_event()
+        thrid = self.queue.pop_event()
+
+        self.assertEqual(first.name, "Event2")
+        self.assertEqual(second.name, "Event3")
+        self.assertEqual(thrid.name, "Event1")
+
+    def test_empty_queue(self):
+        self.assertIsNone(self.queue.pop_event())
+        self.assertEqual(len(self.queue), 0)
+
+
+if __name__ == "__main__":
+    unittest.main()

@@ -30,8 +30,27 @@
 # --------------------------------------------------
 # metrics MODULE
 # --------------------------------------------------
-
+"""
+Metrics tracker for the simulation
+"""
 # --------------------------------------------------
 # imports
 # --------------------------------------------------
+from .event import Event
 
+
+# --------------------------------------------------
+# metrics
+# --------------------------------------------------
+class Metrics:
+    def __init__(self):
+        self.data = {}
+    
+    def record_event(self, event: Event):
+        self.data.setdefault(event.name, 0)
+        self.data[event.name] += 1
+    
+    def report(self):
+        print("=== Simulation Metrics ===")
+        for event_name, count in self.data.items():
+            print(f"{event_name}: {count}")

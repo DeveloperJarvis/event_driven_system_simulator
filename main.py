@@ -37,4 +37,31 @@ Main entry point for the Event-Driven System Simulator
 # imports
 # --------------------------------------------------
 import sys
-from 
+from simulator.engine import SimulationEngine
+from scenarios.queue_simulation import run_queue_simulation
+from scenarios.traffic_simulation import run_traffic_simulation
+from config.config import SIMULATION_CONFIG
+
+
+def main():
+    print("=== Event-Driven System Simulator ===")
+    
+    simulation_type = SIMULATION_CONFIG.get(
+        "simulation_type", "queue"
+    )
+
+    engine = SimulationEngine()
+
+    if simulation_type == "queue":
+        run_queue_simulation(engine)
+    elif simulation_type == "traffic":
+        run_traffic_simulation(engine)
+    else:
+        print(f"Unkown simulation type: {simulation_type}")
+        sys.exit(1)
+
+    print("Simulation completed successfully")
+
+
+if __name__ == "__main__":
+    main()

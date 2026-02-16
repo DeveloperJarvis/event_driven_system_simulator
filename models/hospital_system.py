@@ -30,8 +30,24 @@
 # --------------------------------------------------
 # hospital_system MODULE
 # --------------------------------------------------
-
+"""
+Hospital simulation system
+"""
 # --------------------------------------------------
 # imports
 # --------------------------------------------------
+from simulator.event import Event
+from .generic_system import GenericSystem
 
+
+# --------------------------------------------------
+# hospital system
+# --------------------------------------------------
+class HospitalSystem(GenericSystem):
+    def __init__(self, num_doctors=5):
+        super().__init__("HospitalSystem")
+        self.num_doctors = num_doctors
+        self.patients_waiting = []
+    
+    def update(self, event: Event):
+        print(f"[HospitalSystem] Event: {event.name}")

@@ -34,4 +34,29 @@
 # --------------------------------------------------
 # imports
 # --------------------------------------------------
+import unittest
+import os
 
+
+def run_all_tests():
+    # Discover all tests in the current directory and
+    # subdirectories
+    loader = unittest.TestLoader()
+    tests = loader.discover(
+        start_dir=os.path.dirname(__file__),
+        pattern='test_*.py',
+    )
+    runner = unittest.TextTestRunner(verbosity=2)
+    result = runner.run(tests)
+
+    # Exit code 0 if all tests pass,
+    # 1 otherwise (useful for CI/CD)
+    if result.wasSuccessful():
+        print("\n✅ All tests passed successfully!")
+    else:
+        print("\n❌ Some tests failed!")
+        exit(1)
+
+
+if __name__ == "__main__":
+    run_all_tests()

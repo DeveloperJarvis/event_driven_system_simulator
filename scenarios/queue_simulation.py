@@ -30,8 +30,28 @@
 # --------------------------------------------------
 # queue_simulation MODULE
 # --------------------------------------------------
-
+"""
+Runner for queue system simulation
+"""
 # --------------------------------------------------
 # imports
 # --------------------------------------------------
+from simulator.engine import SimulationEngine
+from events.queue_events import (
+    CustomerArrivalEvent,
+    CustomerServiceEvent,
+)
 
+
+def run_queue_simulation(engine: SimulationEngine = None):
+    if engine is None:
+        engine = SimulationEngine()
+
+    print("Starting Queue Simulation...")
+    engine.add_event(CustomerArrivalEvent(
+        "Customer1", timestamp=1
+    ))
+    engine.add_event(CustomerServiceEvent(
+        "Service1", timestamp=2
+    ))
+    engine.run()

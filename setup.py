@@ -50,12 +50,12 @@ setup(
     python_requires=">=3.9",
     install_requires=[],
     extras_require={
-        "dev": [
-            "pytest",
-            "black",
-            "flake8",
-            "mypy",
-        ]
+        # "dev": [
+        #     "pytest",
+        #     "black",
+        #     "flake8",
+        #     "mypy",
+        # ]
     },
     classifiers=[
         "Programming Language :: Python :: 3",

@@ -30,8 +30,37 @@
 # --------------------------------------------------
 # event_queue MODULE
 # --------------------------------------------------
-
+"""
+Event Queue using a priority queue
+"""
 # --------------------------------------------------
 # imports
 # --------------------------------------------------
+import heapq
 
+from .event import Event
+
+
+# --------------------------------------------------
+# event queue
+# --------------------------------------------------
+class EventQueue:
+    def __init__(self):
+        self._queue = []
+    
+    def add_event(self, event: Event):
+        # Priority queue based on timestamp and priority
+        heapq.heappush(self._queue, (
+            event.timestamp, -event.priority, event
+        ))
+    
+    def pop_event(self):
+        if self._queue:
+            return heapq.heappop(self._queue)[2]
+        return None
+    
+    def is_empty(self):
+        return len(self._queue) == 0
+    
+    def __len__(self):
+        return len(self._queue)

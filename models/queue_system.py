@@ -30,8 +30,23 @@
 # --------------------------------------------------
 # queue_system MODULE
 # --------------------------------------------------
-
+"""
+Queue simulation system
+"""
 # --------------------------------------------------
 # imports
 # --------------------------------------------------
+from simulator.event import Event
+from .generic_system import GenericSystem
 
+# --------------------------------------------------
+# queue system
+# --------------------------------------------------
+class QueueSystem(GenericSystem):
+    def __init__(self, num_servers=1):
+        super().__init__("QueueSystem")
+        self.num_servers = num_servers
+        self.queue = []
+    
+    def update(self, event: Event):
+        print(f"[QueueSystem] Event: {event.name}")

@@ -34,4 +34,22 @@
 # --------------------------------------------------
 # imports
 # --------------------------------------------------
+from simulator.engine import SimulationEngine
+from events.traffic_events import (
+    VehicleSpawnEvent,
+    TrafficLightChangeEvent,
+)
 
+
+def run_traffic_simulation(engine: SimulationEngine = None):
+    if engine is None:
+        engine = SimulationEngine()
+
+    print("Starting Traffic Simulation...")
+    engine.add_event(VehicleSpawnEvent(
+        "Vehicle1", timestamp=1
+    ))
+    engine.add_event(TrafficLightChangeEvent(
+        "Light1", timestamp=2
+    ))
+    engine.run()

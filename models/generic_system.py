@@ -30,8 +30,21 @@
 # --------------------------------------------------
 # generic_system MODULE
 # --------------------------------------------------
-
+"""
+Generic base system for all simulations
+"""
 # --------------------------------------------------
 # imports
 # --------------------------------------------------
+from simulator.event import Event
 
+
+# --------------------------------------------------
+# generic system
+# --------------------------------------------------
+class GenericSystem:
+    def __init__(self, name):
+        self.name = name
+    
+    def update(self, event: Event):
+        print(f"[{self.name}] Handling event: {event.name}")

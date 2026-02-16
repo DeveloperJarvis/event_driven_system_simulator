@@ -34,4 +34,48 @@
 # --------------------------------------------------
 # imports
 # --------------------------------------------------
+import unittest
+from simulator.event import Event
+from events.custom_events import CustomEvent
 
+
+# --------------------------------------------------
+# dummy engine
+# --------------------------------------------------
+class DummyEngine:
+    """Mock engine for testing event processing"""
+    def __init__(self):
+        self.log = []
+
+
+# --------------------------------------------------
+# test events
+# --------------------------------------------------
+class TestEvents(unittest.TestCase):
+
+    def test_custom_event_process(self):
+        engine = DummyEngine()
+        event = CustomEvent(
+            name="DummyEvent",
+            timestamp=0,
+            data={"info": 123},
+        )
+
+        # Override print to capture output
+        import io, sys
+        captured_output = io.StringIO()
+        sys.stdout = captured_output
+        event.process(engine)
+        sys.stdout = sys.__stdout__
+
+        output = captured_output.getvalue()
+        self.assertIn("Processing DummyEvent", output)
+    
+    def test_event_not_implemented(self):
+        event = Event(name="BaseEvent", timestamp=0)
+        with self.assertRaises(NotImplementedError):
+            event.process(None)
+
+
+if __name__ == "__main__":
+    unittest.main()

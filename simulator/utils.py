@@ -30,8 +30,20 @@
 # --------------------------------------------------
 # utils MODULE
 # --------------------------------------------------
-
+"""
+Utility functions for the simulator
+"""
 # --------------------------------------------------
 # imports
 # --------------------------------------------------
+from .event import Event
 
+
+def format_time(timestamp):
+    return f"{timestamp:.2f} units"
+
+def log_event(event: Event, verbose=True):
+    if verbose:
+        print(
+            f"[LOG] Event {event.name} at {event.timestamp}"
+        )

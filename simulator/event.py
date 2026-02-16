@@ -30,8 +30,27 @@
 # --------------------------------------------------
 # event MODULE
 # --------------------------------------------------
-
+"""
+Base event class
+"""
 # --------------------------------------------------
 # imports
 # --------------------------------------------------
 
+
+# --------------------------------------------------
+# event
+# --------------------------------------------------
+class Event:
+    def __init__(self, name, timestamp, priority=4):
+        self.name = name
+        self.timestamp = timestamp
+        self.priority = priority
+    
+    def process(self, engine):
+        """
+        Override this in child classes
+        """
+        raise NotImplementedError(
+            "process() is implemented by subclasses"
+        )

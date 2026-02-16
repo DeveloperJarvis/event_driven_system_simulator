@@ -34,4 +34,40 @@
 # --------------------------------------------------
 # imports
 # --------------------------------------------------
+import unittest
+from simulator.engine import SimulationEngine
+from events.custom_events import CustomEvent
 
+
+# --------------------------------------------------
+# test simulation engine
+# --------------------------------------------------
+class TestSimulationEngine(unittest.TestCase):
+
+    def setUp(self):
+        self.engine = SimulationEngine()
+    
+    def test_add_and_run_event(self):
+        event = CustomEvent(
+            name="TestEvent",
+            timestamp=1,
+            data={"key": "value"}
+        )
+        self.engine.add_event(event)
+        self.engine.run()
+        # Test that the current time updated correctly
+        self.assertEqual(self.engine.current_time, 1)
+    
+    def test_empty_queue(self):
+        # Running an engine with no events should not 
+        # raise exceptions
+        try:
+            self.engine.run()
+        except Exception as e:
+            self.fail(
+                f"Engine run failed with empty queue: {e}"
+            )
+
+
+if __name__ == "__main__":
+    unittest.main()

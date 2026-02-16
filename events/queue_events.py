@@ -30,8 +30,30 @@
 # --------------------------------------------------
 # queue_events MODULE
 # --------------------------------------------------
-
+"""
+Events for queueing systems
+"""
 # --------------------------------------------------
 # imports
 # --------------------------------------------------
+from simulator.event import Event
 
+
+# --------------------------------------------------
+# customer arrival event
+# --------------------------------------------------
+class CustomerArrivalEvent(Event):
+    def process(self, engine):
+        print(
+            f"[Queue] Customer arrived at {self.timestamp}"
+        )
+
+
+# --------------------------------------------------
+# customer service event
+# --------------------------------------------------
+class CustomerServiceEvent(Event):
+    def process(self, engine):
+        print(
+            f"[Queue] Customer serviced at {self.timestamp}"
+        )

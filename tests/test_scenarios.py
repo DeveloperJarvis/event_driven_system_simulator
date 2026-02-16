@@ -34,4 +34,30 @@
 # --------------------------------------------------
 # imports
 # --------------------------------------------------
+import unittest
+from scenarios.queue_simulation import run_queue_simulation
+from scenarios.traffic_simulation import run_traffic_simulation
 
+
+# --------------------------------------------------
+# test scenarios
+# --------------------------------------------------
+class TestScenarios(unittest.TestCase):
+
+    def test_queue_simulation_runs(self):
+        # Should run without errors
+        try:
+            run_queue_simulation()
+        except Exception as e:
+            self.fail(f"Queue simulation failed {e}")
+    
+    def test_traffic_simulation_runs(self):
+        # Should run without errors
+        try:
+            run_traffic_simulation()
+        except Exception as e:
+            self.fail(f"Traffic simulation failed {e}")
+
+
+if __name__ == "__main__":
+    unittest.main()

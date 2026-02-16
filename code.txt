@@ -1,0 +1,515 @@
+# main.py:
+"""
+Main entry point for the Event-Driven System Simulator
+"""
+import sys
+from simulator.engine import SimulationEngine
+from scenarios.queue_simulation import run_queue_simulation
+from scenarios.traffic_simulation import run_traffic_simulation
+from config.config import SIMULATION_CONFIG
+def main():
+    print("=== Event-Driven System Simulator ===")
+    simulation_type = SIMULATION_CONFIG.get(
+        "simulation_type", "queue"
+    )
+    engine = SimulationEngine()
+    if simulation_type == "queue":
+        run_queue_simulation(engine)
+    elif simulation_type == "traffic":
+        run_traffic_simulation(engine)
+    else:
+        print(f"Unkown simulation type: {simulation_type}")
+        sys.exit(1)
+    print("Simulation completed successfully")
+if __name__ == "__main__":
+    main()
+
+
+# setup.py:
+from setuptools import setup, find_packages
+setup(
+    name="event_driven_simulator",
+    version="0.1.0",
+    description="A Python event-driven system simulator for hospitals, queues, traffic, and custom scenarios",
+    author="Developer Jarvis",
+    author_email="developerjarvis@github.com",
+    license="GPL-3.0-or-later",
+    packages=find_packages(
+        exclude=("tests*", "logs*",)
+    ),
+    python_requires=">=3.9",
+    install_requires=[],
+    extras_require={
+    },
+    classifiers=[
+        "Programming Language :: Python :: 3",
+        "License :: OSI Approved :: GNU General Public License v3 or later (GPLv3+)",
+        "Operating System :: OS Independent",
+    ],
+)
+
+
+# config\__init__.py:
+
+
+
+# config\config.py:
+"""
+Configuration file for the Event-Driven System Simulator
+Modify settings here to control simulation behaviour
+"""
+import os
+BASE_DIR =  os.path.join(
+        os.path.dirname(__file__), "..", ".."
+    )
+LOG_DIR = os.path.join(BASE_DIR, "logs")
+LOG_FILE = os.path.join(LOG_DIR, "events.log")
+SIMULATION_CONFIG = {
+    "simulation_type": "queue",
+    "random_seed": 42,
+    "amx_events": 1000,
+    "log_file": LOG_FILE,
+    "verbose": True,
+}
+QUEUE_SYSTEM_CONFIG = {
+    "num_servers": 3,
+    "arrival_rate": 5,
+    "service_rate": 4,
+}
+TRAFFIC_SYSTEM_CONFIG = {
+    "num_intersections": 3,
+    "vehicle_spawn_rate": 10,
+    "light_cycle": 60,
+}
+
+
+# events\__init__.py:
+
+
+
+# events\custom_events.py:
+"""
+Custom user-defined events
+"""
+from simulator.event import Event
+class CustomEvent(Event):
+    def __init__(
+            self, name, timestamp, priority=0, data=None
+        ):
+        super().__init__(name, timestamp, priority)
+        self.data = data
+    def process(self, engine):
+        print(
+            f"[CustomEvent] Processing {self.name} at "
+            f"{self.timestamp} with data: {self.data}"
+        )
+
+
+# events\hospital_events.py:
+"""
+Events specific to hospital systems
+"""
+from simulator.event import Event
+class PatientArrivalEvent(Event):
+    def process(self, engine):
+        print(
+            "[Hospital] Patient arrived at "
+            f"{self.timestamp}"
+        )
+class TreatmentCompletedEvent(Event):
+    def process(self, engine):
+        print(
+            "[Hospital] Treatment completed at"
+            f"{self.timestamp}"
+        )
+
+
+# events\queue_events.py:
+"""
+Events for queueing systems
+"""
+from simulator.event import Event
+class CustomerArrivalEvent(Event):
+    def process(self, engine):
+        print(
+            f"[Queue] Customer arrived at {self.timestamp}"
+        )
+class CustomerServiceEvent(Event):
+    def process(self, engine):
+        print(
+            f"[Queue] Customer serviced at {self.timestamp}"
+        )
+
+
+# events\traffic_events.py:
+"""
+Events for traffic systems
+"""
+from simulator.event import Event
+class VehicleSpawnEvent(Event):
+    def process(self, engine):
+        print(
+            f"[Traffic] Vehicle spawned at {self.timestamp}"
+        )
+class TrafficLightChangeEvent(Event):
+    def process(self, engine):
+        print(
+            "[Traffic] Traffic light changed at "
+            f"{self.timestamp}"
+        )
+
+
+# models\__init__.py:
+
+
+
+# models\generic_system.py:
+"""
+Generic base system for all simulations
+"""
+from simulator.event import Event
+class GenericSystem:
+    def __init__(self, name):
+        self.name = name
+    def update(self, event: Event):
+        print(f"[{self.name}] Handling event: {event.name}")
+
+
+# models\hospital_system.py:
+"""
+Hospital simulation system
+"""
+from simulator.event import Event
+from .generic_system import GenericSystem
+class HospitalSystem(GenericSystem):
+    def __init__(self, num_doctors=5):
+        super().__init__("HospitalSystem")
+        self.num_doctors = num_doctors
+        self.patients_waiting = []
+    def update(self, event: Event):
+        print(f"[HospitalSystem] Event: {event.name}")
+
+
+# models\queue_system.py:
+"""
+Queue simulation system
+"""
+from simulator.event import Event
+from .generic_system import GenericSystem
+class QueueSystem(GenericSystem):
+    def __init__(self, num_servers=1):
+        super().__init__("QueueSystem")
+        self.num_servers = num_servers
+        self.queue = []
+    def update(self, event: Event):
+        print(f"[QueueSystem] Event: {event.name}")
+
+
+# models\traffic_system.py:
+"""
+Traffic simulation system
+"""
+from simulator.event import Event
+from .generic_system import GenericSystem
+class TrafficSystem(GenericSystem):
+    def __init__(self, num_intersections=4):
+        super().__init__("TrafficSystem")
+        self.num_intersections = num_intersections
+    def update(self, event: Event):
+        print(f"[TrafficSystem] Event: {event.name}")
+
+
+# scenarios\__init__.py:
+
+
+
+# scenarios\queue_simulation.py:
+"""
+Runner for queue system simulation
+"""
+from simulator.engine import SimulationEngine
+from events.queue_events import (
+    CustomerArrivalEvent,
+    CustomerServiceEvent,
+)
+def run_queue_simulation(engine: SimulationEngine = None):
+    if engine is None:
+        engine = SimulationEngine()
+    print("Starting Queue Simulation...")
+    engine.add_event(CustomerArrivalEvent(
+        "Customer1", timestamp=1
+    ))
+    engine.add_event(CustomerServiceEvent(
+        "Service1", timestamp=2
+    ))
+    engine.run()
+
+
+# scenarios\traffic_simulation.py:
+from simulator.engine import SimulationEngine
+from events.traffic_events import (
+    VehicleSpawnEvent,
+    TrafficLightChangeEvent,
+)
+def run_traffic_simulation(engine: SimulationEngine = None):
+    if engine is None:
+        engine = SimulationEngine()
+    print("Starting Traffic Simulation...")
+    engine.add_event(VehicleSpawnEvent(
+        "Vehicle1", timestamp=1
+    ))
+    engine.add_event(TrafficLightChangeEvent(
+        "Light1", timestamp=2
+    ))
+    engine.run()
+
+
+# simulator\__init__.py:
+
+
+
+# simulator\engine.py:
+"""
+Simulation engine
+"""
+from .event import Event
+from .event_queue import EventQueue
+class SimulationEngine:
+    def __init__(self):
+        self.event_queue = EventQueue()
+        self.current_time = 0
+    def add_event(self, event: Event):
+        self.event_queue.add_event(event)
+    def run(self):
+        while not self.event_queue.is_empty():
+            event = self.event_queue.pop_event()
+            self.current_time = event.timestamp
+            event.process(self)
+
+
+# simulator\event.py:
+"""
+Base event class
+"""
+class Event:
+    def __init__(self, name, timestamp, priority=4):
+        self.name = name
+        self.timestamp = timestamp
+        self.priority = priority
+    def process(self, engine):
+        """
+        Override this in child classes
+        """
+        raise NotImplementedError(
+            "process() is implemented by subclasses"
+        )
+
+
+# simulator\event_queue.py:
+"""
+Event Queue using a priority queue
+"""
+import heapq
+from .event import Event
+class EventQueue:
+    def __init__(self):
+        self._queue = []
+    def add_event(self, event: Event):
+        heapq.heappush(self._queue, (
+            event.timestamp, -event.priority, event
+        ))
+    def pop_event(self):
+        if self._queue:
+            return heapq.heappop(self._queue)[2]
+        return None
+    def is_empty(self):
+        return len(self._queue) == 0
+    def __len__(self):
+        return len(self._queue)
+
+
+# simulator\metrics.py:
+"""
+Metrics tracker for the simulation
+"""
+from .event import Event
+class Metrics:
+    def __init__(self):
+        self.data = {}
+    def record_event(self, event: Event):
+        self.data.setdefault(event.name, 0)
+        self.data[event.name] += 1
+    def report(self):
+        print("=== Simulation Metrics ===")
+        for event_name, count in self.data.items():
+            print(f"{event_name}: {count}")
+
+
+# simulator\utils.py:
+"""
+Utility functions for the simulator
+"""
+from .event import Event
+def format_time(timestamp):
+    return f"{timestamp:.2f} units"
+def log_event(event: Event, verbose=True):
+    if verbose:
+        print(
+            f"[LOG] Event {event.name} at {event.timestamp}"
+        )
+
+
+# tests\__init__.py:
+
+
+
+# tests\test_engine.py:
+import unittest
+from simulator.engine import SimulationEngine
+from events.custom_events import CustomEvent
+class TestSimulationEngine(unittest.TestCase):
+    def setUp(self):
+        self.engine = SimulationEngine()
+    def test_add_and_run_event(self):
+        event = CustomEvent(
+            name="TestEvent",
+            timestamp=1,
+            data={"key": "value"}
+        )
+        self.engine.add_event(event)
+        self.engine.run()
+        self.assertEqual(self.engine.current_time, 1)
+    def test_empty_queue(self):
+        try:
+            self.engine.run()
+        except Exception as e:
+            self.fail(
+                f"Engine run failed with empty queue: {e}"
+            )
+if __name__ == "__main__":
+    unittest.main()
+
+
+# tests\test_event_queue.py:
+import unittest
+from simulator.event_queue import EventQueue
+from events.custom_events import CustomEvent
+class TestEventQueue(unittest.TestCase):
+    def setUp(self):
+        self.queue = EventQueue()
+    def test_enqueue_dequeue_order(self):
+        event1 = CustomEvent(name="Event1", timestamp=5)
+        event2 = CustomEvent(name="Event2", timestamp=2)
+        event3 = CustomEvent(name="Event3", timestamp=3)
+        self.queue.add_event(event1)
+        self.queue.add_event(event2)
+        self.queue.add_event(event3)
+        first = self.queue.pop_event()
+        second = self.queue.pop_event()
+        thrid = self.queue.pop_event()
+        self.assertEqual(first.name, "Event2")
+        self.assertEqual(second.name, "Event3")
+        self.assertEqual(thrid.name, "Event1")
+    def test_empty_queue(self):
+        self.assertIsNone(self.queue.pop_event())
+        self.assertEqual(len(self.queue), 0)
+if __name__ == "__main__":
+    unittest.main()
+
+
+# tests\test_events.py:
+import unittest
+from simulator.event import Event
+from events.custom_events import CustomEvent
+class DummyEngine:
+    """Mock engine for testing event processing"""
+    def __init__(self):
+        self.log = []
+class TestEvents(unittest.TestCase):
+    def test_custom_event_process(self):
+        engine = DummyEngine()
+        event = CustomEvent(
+            name="DummyEvent",
+            timestamp=0,
+            data={"info": 123},
+        )
+        import io, sys
+        captured_output = io.StringIO()
+        sys.stdout = captured_output
+        event.process(engine)
+        sys.stdout = sys.__stdout__
+        output = captured_output.getvalue()
+        self.assertIn("Processing DummyEvent", output)
+    def test_event_not_implemented(self):
+        event = Event(name="BaseEvent", timestamp=0)
+        with self.assertRaises(NotImplementedError):
+            event.process(None)
+if __name__ == "__main__":
+    unittest.main()
+
+
+# tests\test_metics.py:
+import unittest
+from simulator.metrics import Metrics
+from events.custom_events import CustomEvent
+class TestMetrics(unittest.TestCase):
+    def test_record_and_report(self):
+        metrics = Metrics()
+        event1 = CustomEvent(name="EventA", timestamp=0)
+        event2 = CustomEvent(name="EventB", timestamp=0)
+        metrics.record_event(event1)
+        metrics.record_event(event1)
+        metrics.record_event(event2)
+        self.assertEqual(metrics.data["EventA"], 2)
+        self.assertEqual(metrics.data["EventB"], 1)
+        import io, sys
+        captured_output = io.StringIO()
+        sys.stdout = captured_output
+        metrics.report()
+        sys.stdout = sys.__stdout__
+        output = captured_output.getvalue()
+        self.assertIn("EventA: 2", output)
+        self.assertIn("EventB: 1", output)
+if __name__ == "__main__":
+    unittest.main()
+
+
+# tests\test_runner.py:
+import unittest
+import os
+def run_all_tests():
+    loader = unittest.TestLoader()
+    tests = loader.discover(
+        start_dir=os.path.dirname(__file__),
+        pattern='test_*.py',
+    )
+    runner = unittest.TextTestRunner(verbosity=2)
+    result = runner.run(tests)
+    if result.wasSuccessful():
+        print("\n✅ All tests passed successfully!")
+    else:
+        print("\n❌ Some tests failed!")
+        exit(1)
+if __name__ == "__main__":
+    run_all_tests()
+
+
+# tests\test_scenarios.py:
+import unittest
+from scenarios.queue_simulation import run_queue_simulation
+from scenarios.traffic_simulation import run_traffic_simulation
+class TestScenarios(unittest.TestCase):
+    def test_queue_simulation_runs(self):
+        try:
+            run_queue_simulation()
+        except Exception as e:
+            self.fail(f"Queue simulation failed {e}")
+    def test_traffic_simulation_runs(self):
+        try:
+            run_traffic_simulation()
+        except Exception as e:
+            self.fail(f"Traffic simulation failed {e}")
+if __name__ == "__main__":
+    unittest.main()
+
+

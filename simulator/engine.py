@@ -30,8 +30,29 @@
 # --------------------------------------------------
 # engine MODULE
 # --------------------------------------------------
-
+"""
+Simulation engine
+"""
 # --------------------------------------------------
 # imports
 # --------------------------------------------------
+from .event import Event
+from .event_queue import EventQueue
 
+
+# --------------------------------------------------
+# simulation engine
+# --------------------------------------------------
+class SimulationEngine:
+    def __init__(self):
+        self.event_queue = EventQueue()
+        self.current_time = 0
+    
+    def add_event(self, event: Event):
+        self.event_queue.add_event(event)
+    
+    def run(self):
+        while not self.event_queue.is_empty():
+            event = self.event_queue.pop_event()
+            self.current_time = event.timestamp
+            event.process(self)

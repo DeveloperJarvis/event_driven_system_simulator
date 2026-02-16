@@ -30,8 +30,32 @@
 # --------------------------------------------------
 # hospital_events MODULE
 # --------------------------------------------------
-
+"""
+Events specific to hospital systems
+"""
 # --------------------------------------------------
 # imports
 # --------------------------------------------------
+from simulator.event import Event
 
+
+# --------------------------------------------------
+# patient arrival event
+# --------------------------------------------------
+class PatientArrivalEvent(Event):
+    def process(self, engine):
+        print(
+            "[Hospital] Patient arrived at "
+            f"{self.timestamp}"
+        )
+
+
+# --------------------------------------------------
+# treatment completed event
+# --------------------------------------------------
+class TreatmentCompletedEvent(Event):
+    def process(self, engine):
+        print(
+            "[Hospital] Treatment completed at"
+            f"{self.timestamp}"
+        )

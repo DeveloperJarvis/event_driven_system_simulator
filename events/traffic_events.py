@@ -30,8 +30,31 @@
 # --------------------------------------------------
 # traffic_events MODULE
 # --------------------------------------------------
-
+"""
+Events for traffic systems
+"""
 # --------------------------------------------------
 # imports
 # --------------------------------------------------
+from simulator.event import Event
 
+
+# --------------------------------------------------
+# vehicle spawn event
+# --------------------------------------------------
+class VehicleSpawnEvent(Event):
+    def process(self, engine):
+        print(
+            f"[Traffic] Vehicle spawned at {self.timestamp}"
+        )
+
+
+# --------------------------------------------------
+# traffic light change event
+# --------------------------------------------------
+class TrafficLightChangeEvent(Event):
+    def process(self, engine):
+        print(
+            "[Traffic] Traffic light changed at "
+            f"{self.timestamp}"
+        )
